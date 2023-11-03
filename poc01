@@ -1,0 +1,70 @@
+Creating a full Vespa application from scratch here is quite involved, but I can provide you with a simplified example to get you started with a text-based search application using Vespa. This example assumes you have Vespa set up and configured. Please adapt it to your specific needs and refer to Vespa's documentation for more details.
+
+1. **Create a Vespa Application Package**:
+   Start by creating a directory for your Vespa application and defining the necessary configuration files:
+
+   ```
+   my-vespa-app/
+   ├── src/
+   │   └── main/
+   │       └── application/
+   │           └── searchdefinitions/
+   │               └── mytextsearch.sd
+   ├── services.xml
+   ├── deployment.xml
+   ```
+
+2. **Define Schema (mytextsearch.sd)**:
+   Create a schema for text-based search in `mytextsearch.sd`:
+
+   ```xml
+   schema mytextsearch {
+       document mydocument {
+           field title type string {
+               indexing: index
+               index: enable-bm25
+           }
+           field content type string {
+               indexing: index
+               index: enable-bm25
+           }
+           field timestamp type long {
+               indexing: attribute
+           }
+       }
+   }
+   ```
+
+3. **Define a Search Application (services.xml)**:
+   Configure your search application in `services.xml`:
+
+   ```xml
+   <?xml version="1.0" encoding="utf-8" ?>
+   <services version="1.0">
+       <container id="mycontainer" version="1.0">
+           <search />
+           <document-processing />
+           <nodes>
+               <node host="localhost" />
+           </nodes>
+           <content id="mycontent" />
+       </container>
+   </services>
+   ```
+
+4. **Deployment Configuration (deployment.xml)**:
+   Configure deployment settings for your application in `deployment.xml`. You can specify resources, distribution, etc.
+
+5. **Feed Data**:
+   Ingest data into your Vespa application. This can be done programmatically or using Vespa's built-in feed client.
+
+6. **Query Vespa**:
+   You can now query Vespa for text-based search. You can use Vespa's HTTP Query API or SDKs in various programming languages.
+
+7. **Deploy Application**:
+   Deploy your Vespa application using Vespa's deployment tools.
+
+8. **Query Data**:
+   Query your Vespa application using HTTP requests or through SDKs in your preferred programming language.
+
+This is a basic example to get you started with text-based search using Vespa. Depending on your specific use case and requirements, you may need to customize your Vespa application further. Refer to Vespa's official documentation for more details on advanced configurations and features.
