@@ -121,3 +121,30 @@ Certainly, let's dive into more details for steps 4, 5, 6, and 7 of creating a t
    The specifics may vary depending on your Vespa setup and configuration. You can find more detailed deployment instructions in Vespa's official documentation.
 
 These steps provide a high-level overview of creating and using a text-based search Vespa application. Vespa is a powerful platform with many features, so further details and customization options are available in the official Vespa documentation to suit your specific use case and needs.
+
+Sure, here's an example of a sample document in JSON format that you can use to feed data into your Vespa application for text-based search. This document represents a hypothetical "mydocument" type as defined in your Vespa schema.
+
+```json
+{
+  "put": "id:mytextsearch:mydocument::unique_document_id",
+  "fields": {
+    "title": "Sample Title",
+    "content": "This is the content of the document. You can place your text here.",
+    "timestamp": 1635957600000
+  }
+}
+```
+
+Here's a breakdown of this document:
+
+- `"id:mytextsearch:mydocument::unique_document_id"`: This is a unique identifier for the document. You should replace `"unique_document_id"` with a unique identifier for your document.
+
+- `"title"`: This field represents the title of the document.
+
+- `"content"`: This field contains the main content of the document. You can place your text content here.
+
+- `"timestamp"`: This field can represent a timestamp or any other attribute you want to associate with the document.
+
+You can create multiple such documents and feed them into Vespa by sending HTTP POST requests with the JSON data to the Vespa API, as mentioned in Step 5 of the previous response. Each document should have a unique identifier to ensure proper indexing and retrieval.
+
+Remember to customize the document data to match your specific use case and dataset.
