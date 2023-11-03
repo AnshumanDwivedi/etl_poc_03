@@ -68,3 +68,56 @@ Creating a full Vespa application from scratch here is quite involved, but I can
    Query your Vespa application using HTTP requests or through SDKs in your preferred programming language.
 
 This is a basic example to get you started with text-based search using Vespa. Depending on your specific use case and requirements, you may need to customize your Vespa application further. Refer to Vespa's official documentation for more details on advanced configurations and features.
+
+
+Certainly, let's dive into more details for steps 4, 5, 6, and 7 of creating a text-based search Vespa application:
+
+**Step 4: Deployment Configuration (deployment.xml)**:
+   In the `deployment.xml` file, you define how your Vespa application should be deployed. This includes specifying the resources allocated to your services, distribution of data, redundancy, and other deployment-related settings. Below is an example:
+
+   ```xml
+   <?xml version="1.0" encoding="utf-8" ?>
+   <deployment version="1.0">
+       <search />
+       <content id="mycontent" version="1.0">
+           <redundancy>2</redundancy> <!-- Number of copies of your data -->
+           <documents>
+               <document-processing/>
+               <mydocument type="mytextsearch"/>
+           </documents>
+           <group>mygroup</group> <!-- Name of the group containing your nodes -->
+       </content>
+   </deployment>
+   ```
+
+   You can specify the number of copies (redundancy) for your data, document types, and group names in this configuration.
+
+**Step 5: Feed Data**:
+   To populate your Vespa application with data, you'll need to feed documents into it. You can do this using Vespa's built-in feed client, which sends HTTP POST requests to Vespa's API to feed data. You can create documents in Vespa's JSON format and send them via HTTP requests. For example, using `curl`:
+
+   ```bash
+   curl -X POST --data-binary @mydocument.json http://localhost:8080/document/v1/mydocument/mydocument/docid
+   ```
+
+   Replace `mydocument.json` with your data in JSON format, and `docid` with a unique identifier for your document.
+
+**Step 6: Query Vespa**:
+   You can query Vespa using its HTTP Query API. You can construct search queries in Vespa's query language or use the Vespa Query API to send search requests. For example, you can use a URL like this to perform a simple text-based search:
+
+   ```
+   http://localhost:8080/search/?yql=select * from mydocument where title contains "your_query_string"
+   ```
+
+   Replace `"your_query_string"` with the text you want to search for. You can customize the query to match your specific use case.
+
+**Step 7: Deploy Application**:
+   Deploying your Vespa application involves packaging and deploying your configuration and code to Vespa's services. This typically requires using Vespa's deployment tools and may involve a command like:
+
+   ```
+   vespa-deploy prepare /path/to/your/application-package
+   vespa-deploy activate
+   ```
+
+   The specifics may vary depending on your Vespa setup and configuration. You can find more detailed deployment instructions in Vespa's official documentation.
+
+These steps provide a high-level overview of creating and using a text-based search Vespa application. Vespa is a powerful platform with many features, so further details and customization options are available in the official Vespa documentation to suit your specific use case and needs.
