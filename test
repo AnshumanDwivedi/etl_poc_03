@@ -1,0 +1,79 @@
+You can write a Gradle initialization script (init.gradle) to ensure that the common.build.gradle file is downloaded before the build process starts. Here’s how to do it:
+
+
+---
+
+1. Create an init.gradle Script
+
+This script will:
+
+Check if common.build.gradle exists.
+
+Download it if missing.
+
+Apply it dynamically before the build starts.
+
+
+Example: init.gradle
+
+// Define the location of the common Gradle file
+def gradleVersion = "v1.0.0"
+def commonGradleUrl = "https://raw.githubusercontent.com/your-org/gradle-common-config/${gradleVersion}/common.build.gradle"
+def commonGradleFile = new File(gradle.gradleUserHomeDir, "common.build.gradle")
+
+// Download the common build.gradle file if it does not exist or needs updating
+if (!commonGradleFile.exists()) {
+    println "Downloading common.build.gradle version: ${gradleVersion}"
+    commonGradleFile.withOutputStream { out ->
+        new URL(commonGradleUrl).withInputStream { it.copyTo(out) }
+    }
+}
+
+// Apply the common build script dynamically to all projects
+gradle.beforeProject { project ->
+    project.apply from: commonGradleFile
+}
+
+
+---
+
+2. Run Gradle with the init.gradle Script
+
+You need to pass this script at runtime:
+
+gradle build --init-script /path/to/init.gradle
+
+OR you can place init.gradle inside ~/.gradle/init.gradle (applies to all Gradle builds on your system):
+
+mkdir -p ~/.gradle
+mv init.gradle ~/.gradle/init.gradle
+
+Then, every time you run gradle build, it will automatically download and apply common.build.gradle.
+
+
+---
+
+3. Alternative: Inject via settings.gradle (Per Project)
+
+If you want this logic inside each project (rather than globally), modify settings.gradle:
+
+def gradleVersion = "v1.0.0"
+def commonGradleUrl = "https://raw.githubusercontent.com/your-org/gradle-common-config/${gradleVersion}/common.build.gradle"
+def commonGradleFile = file("$rootDir/common.build.gradle")
+
+if (!commonGradleFile.exists()) {
+    println "Downloading common.build.gradle version: ${gradleVersion}"
+    new URL(commonGradleUrl).withInputStream { i -> commonGradleFile.withOutputStream { it << i } }
+}
+
+// Apply the common script in the root project
+apply from: commonGradleFile
+
+This ensures that common.build.gradle is downloaded before the build starts, but only for that specific project.
+
+
+---
+
+Which Approach is Best?
+
+Would you like this to support private repositories with authentication as well?
